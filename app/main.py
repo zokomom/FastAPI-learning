@@ -1,13 +1,17 @@
-from fastapi import FastAPI,Response,status,HTTPException
+from fastapi import FastAPI,Response,status,HTTPException,Depends
 from fastapi.params import Body
 from pydantic import BaseModel
 from typing import Optional
 from random import randrange
 import psycopg
 from psycopg.rows import dict_row
-import json
+from .database import engine, get_db
+from sqlalchemy.orm import Session
+from . import models
 
 app=FastAPI()
+
+models.Base.metadata.create_all(bind=engine)
 
 try : 
     conn = psycopg.connect(host='localhost',dbname='social_media_database',user='postgres',password='root',row_factory=dict_row)
@@ -36,6 +40,11 @@ class Post(BaseModel):
 @app.get("/")
 def root():
     return {"message": "Hello World"}
+
+@app.get("/sqlalchemy")
+def sqlalchemy(db:Session=Depends(get_db)):
+    posts=db.query(models.Post).all()
+    return posts
 
 @app.get("/posts")
 def get_all_posts():
