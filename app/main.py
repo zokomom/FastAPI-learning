@@ -7,7 +7,7 @@ from .database import engine, get_db
 from sqlalchemy.orm import Session
 from . import models
 from . import schemas 
-
+from sqlalchemy.exc import IntegrityError
 app=FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
@@ -86,3 +86,18 @@ def update_posts(id:int,post:schemas.PostUpdate,db:Session=Depends(get_db)):
     post_query.update(post.dict(),synchronize_session=False)
     db.commit()
     return post_query.first()
+
+@app.post("/users",status_code=status.HTTP_201_CREATED,response_model=schemas.UsersOut)
+def create_user(user:schemas.UsersCreate,db:Session=Depends(get_db)):
+    new_user=models.Users(**user.dict())
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already exists"
+        )
+    return new_user
