@@ -5,8 +5,7 @@ import psycopg
 from psycopg.rows import dict_row
 from .database import engine, get_db
 from sqlalchemy.orm import Session
-from . import models
-from . import schemas 
+from . import models,schemas,utils
 from sqlalchemy.exc import IntegrityError
 app=FastAPI()
 
@@ -89,6 +88,8 @@ def update_posts(id:int,post:schemas.PostUpdate,db:Session=Depends(get_db)):
 
 @app.post("/users",status_code=status.HTTP_201_CREATED,response_model=schemas.UsersOut)
 def create_user(user:schemas.UsersCreate,db:Session=Depends(get_db)):
+    new_password=utils.hash(user.password)
+    user.password=new_password
     new_user=models.Users(**user.dict())
     try:
         db.add(new_user)
