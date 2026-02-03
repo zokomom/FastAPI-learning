@@ -1,12 +1,12 @@
 from fastapi import FastAPI,Response,status,HTTPException,Depends
 from fastapi.params import Body
 from random import randrange
-import psycopg
-from psycopg.rows import dict_row
 from .database import engine, get_db
-from sqlalchemy.orm import Session
-from . import models,schemas,utils
-from sqlalchemy.exc import IntegrityError
+from .routers import post,user
+from . import models
+# import psycopg
+# from psycopg.rows import dict_row
+
 app=FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
@@ -30,82 +30,9 @@ models.Base.metadata.create_all(bind=engine)
 #         if i['id']==id:
 #             return index_count
 
-
+app.include_router(post.router)
+app.include_router(user.router)
 
 @app.get("/")
 def root():
     return {"message": "Hello World"}
-
-@app.get("/posts",response_model=list[schemas.Post])
-def get_all_posts(db:Session=Depends(get_db)):
-    # cursor.execute("""SELECT * FROM POSTS""")
-    # return {"data":cursor.fetchall()}
-    return db.query(models.Post).all() 
-
-@app.post("/posts",status_code=status.HTTP_201_CREATED,response_model=schemas.Post)
-def create_post(post : schemas.PostCreate,db:Session=Depends(get_db)):
-    # cursor.execute("""INSERT INTO posts (title,content,published) VALUES (%s,%s,%s) RETURNING * """,(post.title,post.content,post.published))
-    # new_post=cursor.fetchone()
-    # conn.commit()
-    new_post=models.Post(**post.dict())
-    db.add(new_post)
-    db.commit()
-    db.refresh(new_post)
-    return new_post
-
-@app.get("/posts/{id}",response_model=schemas.Post)
-def get_post_by_id(id:int,db:Session=Depends(get_db)):
-    # cursor.execute("""SELECT * FROM posts WHERE id = %s""",(id,))
-    # post=cursor.fetchone()
-    post=db.query(models.Post).filter(models.Post.id==id).first()
-    if not post:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"post with id {id} not found")
-    return post
-
-@app.delete("/posts/{id}",status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id:int,db:Session=Depends(get_db)):
-    # cursor.execute("""DELETE FROM posts WHERE id = %s returning *""",(id,))
-    # delete_post=cursor.fetchone()
-    # conn.commit()
-    delete_post=db.query(models.Post).filter(models.Post.id==id).first()
-    if delete_post==None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"The id {id} does not exists")
-    db.delete(delete_post)
-    db.commit()
-
-@app.put("/posts/{id}",status_code=status.HTTP_200_OK,response_model=schemas.Post)
-def update_posts(id:int,post:schemas.PostUpdate,db:Session=Depends(get_db)):
-    # cursor.execute("""UPDATE posts SET title=%s,content=%s,published=%s WHERE id=%s RETURNING * """,(post.title,post.content,post.published,id))
-    # updated_post=cursor.fetchone()
-    # conn.commit()
-    post_query=db.query(models.Post).filter(models.Post.id==id)
-    updated_post=post_query.first()
-    if not updated_post:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"The id {id} does not exists") 
-    post_query.update(post.dict(),synchronize_session=False)
-    db.commit()
-    return post_query.first()
-
-@app.post("/users",status_code=status.HTTP_201_CREATED,response_model=schemas.UsersOut)
-def create_user(user:schemas.UsersCreate,db:Session=Depends(get_db)):
-    new_password=utils.hash(user.password)
-    user.password=new_password
-    new_user=models.Users(**user.dict())
-    try:
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Email already exists"
-        )
-    return new_user
-
-@app.get("/users/{id}",status_code=status.HTTP_200_OK,response_model=schemas.UsersOut)
-def get_user_by_id(id:int,db:Session=Depends(get_db)):
-    user=db.query(models.Users).filter(models.Users.user_id==id).first()
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"User with id : {id} not found")
-    return user
