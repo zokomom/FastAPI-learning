@@ -102,3 +102,10 @@ def create_user(user:schemas.UsersCreate,db:Session=Depends(get_db)):
             detail="Email already exists"
         )
     return new_user
+
+@app.get("/users/{id}",status_code=status.HTTP_200_OK,response_model=schemas.UsersOut)
+def get_user_by_id(id:int,db:Session=Depends(get_db)):
+    user=db.query(models.Users).filter(models.Users.user_id==id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"User with id : {id} not found")
+    return user
