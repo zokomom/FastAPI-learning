@@ -10,7 +10,7 @@ router=APIRouter(
 )
 
 @router.get("/",response_model=list[schemas.Post])
-def get_all_posts(db:Session=Depends(get_db)):
+def get_all_posts(db:Session=Depends(get_db),get_access_token : int = Depends(oauth2.get_current_user)):
     # cursor.execute("""SELECT * FROM POSTS""")
     # return {"data":cursor.fetchall()}
     return db.query(models.Post).all() 

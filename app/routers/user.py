@@ -3,6 +3,7 @@ from .. import schemas,models,utils
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from ..database import get_db
+from .. import oauth2
 
 router=APIRouter(
     prefix="/users",
@@ -10,7 +11,7 @@ router=APIRouter(
 )
 
 @router.post("/",status_code=status.HTTP_201_CREATED,response_model=schemas.UsersOut)
-def create_user(user:schemas.UsersCreate,db:Session=Depends(get_db)):
+def create_user(user:schemas.UsersCreate,db:Session=Depends(get_db),get_access_token:int=Depends(oauth2.get_current_user)):
     new_password=utils.hash(user.password)
     user.password=new_password
     new_user=models.Users(**user.dict())
