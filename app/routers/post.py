@@ -59,5 +59,8 @@ def update_posts(id:int,post:schemas.PostUpdate,db:Session=Depends(get_db),get_a
     if not updated_post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"The id {id} does not exists") 
     post_query.update(post.dict(),synchronize_session=False)
+    
+    if update_posts.user_id != oauth2.get_current_user.user_id :
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Not authorized to perform requested action")
     db.commit()
     return post_query.first()
