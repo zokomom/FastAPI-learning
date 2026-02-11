@@ -3,11 +3,11 @@ from .. import schemas,models,utils
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from ..database import get_db
-from .. import oauth2
+
 
 router=APIRouter(
     prefix="/users",
-    tags=['user']
+    tags=['users']
 )
 
 @router.post("/",status_code=status.HTTP_201_CREATED,response_model=schemas.UsersOut)

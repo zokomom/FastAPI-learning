@@ -41,10 +41,11 @@ def delete_post(id:int,db:Session=Depends(get_db),get_access_token : int = Depen
     # delete_post=cursor.fetchone()
     # conn.commit()
     delete_post=db.query(models.Post).filter(models.Post.id==id).first()
+
     if delete_post==None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"The id {id} does not exists")
 
-    if delete_post.user_id != oauth2.get_current_user.user_id :
+    if delete_post.owner_id != get_access_token.user_id :
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Not authorized to perform requested action")
     db.delete(delete_post)
     db.commit()
@@ -60,7 +61,7 @@ def update_posts(id:int,post:schemas.PostUpdate,db:Session=Depends(get_db),get_a
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"The id {id} does not exists") 
     post_query.update(post.dict(),synchronize_session=False)
     
-    if update_posts.user_id != oauth2.get_current_user.user_id :
+    if updated_post.owner_id != get_access_token.user_id :
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Not authorized to perform requested action")
     db.commit()
     return post_query.first()
