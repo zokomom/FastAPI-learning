@@ -18,9 +18,10 @@ class Post(BaseModel):
     content:str
     published:bool
     created_at:datetime
+    owner_id:int
 
     class Config:
-        orm_mode=True   
+        orm_mode=True
 
 class UsersCreate(BaseModel):
     email:EmailStr
