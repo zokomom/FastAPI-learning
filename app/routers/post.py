@@ -43,6 +43,9 @@ def delete_post(id:int,db:Session=Depends(get_db),get_access_token : int = Depen
     delete_post=db.query(models.Post).filter(models.Post.id==id).first()
     if delete_post==None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"The id {id} does not exists")
+
+    if delete_post.user_id != oauth2.get_current_user.user_id :
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Not authorized to perform requested action")
     db.delete(delete_post)
     db.commit()
 
