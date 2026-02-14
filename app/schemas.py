@@ -12,6 +12,11 @@ class PostCreate(PostsBaseSchema):
 class PostUpdate(PostsBaseSchema):
     pass
 
+class UsersOut(BaseModel):
+    user_id:int
+    email:EmailStr
+    created_at:datetime
+
 class Post(BaseModel):
     id:int
     title:str
@@ -19,18 +24,13 @@ class Post(BaseModel):
     published:bool
     created_at:datetime
     owner_id:int
-
+    owner:UsersOut
     class Config:
         orm_mode=True
 
 class UsersCreate(BaseModel):
     email:EmailStr
     password:str
-
-class UsersOut(BaseModel):
-    user_id:int
-    email:EmailStr
-    created_at:datetime
 
 class UserLogin(BaseModel):
     email:EmailStr
