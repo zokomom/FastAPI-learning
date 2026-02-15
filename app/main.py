@@ -1,7 +1,5 @@
-from fastapi import FastAPI,Response,status,HTTPException,Depends
-from fastapi.params import Body
-from random import randrange
-from .database import engine, get_db
+from fastapi import FastAPI
+from .database import engine
 from .routers import post,user,auth
 from . import models
 # import psycopg
