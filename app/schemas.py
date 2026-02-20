@@ -30,6 +30,13 @@ class Post(BaseModel):
     model_config={
         "from_attributes":True
     }
+
+class PostOut(BaseModel):
+    Post:Post
+    votes:int
+    class Config:
+        orm_mode=True
+
 class UsersCreate(BaseModel):
     email:EmailStr
     password:str

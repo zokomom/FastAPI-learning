@@ -15,7 +15,7 @@ models.Base.metadata.create_all(bind=engine)
 #     print("Database Connected Successfully!")
 # except Exception as e:
 #     print(e)
-# source=[{'title':'college','content':'bekar hai bhot','id':1},{'title':'school','content':'acha hai bhot','id':2}]
+# source=[{'title':'college','content':'random','id':1},{'title':'school','content':'acha hai bhot','id':2}]
 
 # def post_by_id(id):
 #     for i in source:
