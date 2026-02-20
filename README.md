@@ -1,2 +1,2 @@
 # FastAPI-learning
-my learning journey of FastAPI
+learning journey of FastAPI
