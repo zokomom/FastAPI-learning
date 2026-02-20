@@ -3,3 +3,6 @@ __pycache__/
 .vscode/
 .env
 venv/
+
+# Alembic cache
+alembic/__pycache__/
