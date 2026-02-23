@@ -5,6 +5,18 @@ from ..database import get_db
 from .. import oauth2
 from typing import Optional
 from sqlalchemy import func
+# from ..database import cursor
+
+# def post_by_id(id):
+#     for i in source:
+#         if i['id']==id:
+#             return i
+# def index(id):
+#     index_count=-1
+#     for i in source:
+#         index_count+=1
+#         if i['id']==id:
+#             return index_count
 
 router=APIRouter(
     prefix="/posts",
