@@ -13,7 +13,16 @@ from .config import settings
 
 # source=[{'title':'college','content':'random','id':1},{'title':'school','content':'random','id':2}]
 
-DATABASE_URL = settings.database_url
+database_url = settings.database_url
+
+if database_url.startswith("postgresql://"):
+    database_url = database_url.replace(
+        "postgresql://",
+        "postgresql+psycopg://",
+        1
+    )
+    
+DATABASE_URL = database_url
 
 engine = create_engine(DATABASE_URL)
 
