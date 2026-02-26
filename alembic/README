@@ -7,7 +7,7 @@
 
 📘 **ReDoc:** https://interacthub-wfkm.onrender.com/redoc  
 
-### InteractHub is a modular RESTful backend application built using FastAPI and PostgreSQL. It provides core social media features including user authentication, post creation, retrieval, and like functionality.
+#### InteractHub is a modular RESTful backend application built using FastAPI and PostgreSQL. It provides core social media features including user authentication, post creation, retrieval, and like functionality.
 ---
 
 ## 🧠 Features
