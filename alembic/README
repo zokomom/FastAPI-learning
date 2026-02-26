@@ -1,10 +1,13 @@
 # 🚀 InteractHub – RESTful Social Media Backend API
 
-InteractHub is a modular RESTful backend application built using FastAPI and PostgreSQL.  
-It provides core social media features including user authentication, post creation, retrieval, and like functionality.
+🔗 **Live API:** https://interacthub-wfkm.onrender.com/  
+> 🚀 Cold start Alert !! : First request may take ~15–20 seconds. The server boots, stretches, and then gets to work.
 
-This project demonstrates production-ready backend architecture, secure authentication workflows, relational database design, and cloud deployment practices.
+📄 **Swagger Docs:** https://interacthub-wfkm.onrender.com/docs  
 
+📘 **ReDoc:** https://interacthub-wfkm.onrender.com/redoc  
+
+### InteractHub is a modular RESTful backend application built using FastAPI and PostgreSQL. It provides core social media features including user authentication, post creation, retrieval, and like functionality.
 ---
 
 ## 🧠 Features
