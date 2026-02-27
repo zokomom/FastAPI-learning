@@ -26,7 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
         
-      -name: Import Check
+      - name: Import Check
         run: |
           python -c "Impost app.main"
           
