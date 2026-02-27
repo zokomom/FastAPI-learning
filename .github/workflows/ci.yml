@@ -28,5 +28,5 @@ jobs:
         
       - name: Import Check
         run: |
-          python -c "Impost app.main"
+          python -c "Import app.main"
           
