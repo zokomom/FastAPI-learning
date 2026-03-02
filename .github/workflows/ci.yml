@@ -10,9 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     environment: Production
-
     env: 
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
@@ -23,9 +21,8 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
           POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
-          POSTGRES_DB: ${{secrets.POSTGRES_DB}}_test
+          POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
         ports:
           - 5432:5432
         options: >-
@@ -34,6 +31,7 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
+    runs-on: ubuntu-latest
     steps:
       - name: pulling github repository
         uses: actions/checkout@v4
